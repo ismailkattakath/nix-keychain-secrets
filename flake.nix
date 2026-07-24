@@ -23,7 +23,6 @@
     let
       inherit (nixpkgs) lib;
       darwinSystems = [
-        "x86_64-darwin"
         "aarch64-darwin"
       ];
       allSystems = darwinSystems ++ [

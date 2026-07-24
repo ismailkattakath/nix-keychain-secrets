@@ -1,4 +1,8 @@
-# keychain-secrets
+# nix-keychain-secrets
+
+[![CI](https://github.com/ismailkattakath/nix-keychain-secrets/actions/workflows/ci.yml/badge.svg)](https://github.com/ismailkattakath/nix-keychain-secrets/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Built with Nix](https://img.shields.io/badge/built%20with-Nix-5277C3.svg?logo=nixos&logoColor=white)](https://nixos.org)
 
 **Your API keys in every shell — from the macOS login Keychain, not a dotfile.**
 
@@ -22,11 +26,17 @@ processes silently get *zero* secrets. This wires all four shell entry points
 (a `__SECRETS_KEYCHAIN_LOADED` sentinel; ~470 ms paid once at the root) and
 exports each value to every descendant.
 
+## Prerequisites
+
+- **macOS** — the store is the macOS login Keychain (`/usr/bin/security`). The module is a clean no-op on Linux.
+- **Nix** with flakes enabled (`experimental-features = nix-command flakes`).
+- **[home-manager](https://github.com/nix-community/home-manager)** — the module plugs into `programs.zsh`/`programs.bash`, so enable those for full every-shell coverage.
+
 ## Install (flake + home-manager)
 
 ```nix
 {
-  inputs.keychain-secrets.url = "github:ismailkattakath/keychain-secrets";
+  inputs.keychain-secrets.url = "github:ismailkattakath/nix-keychain-secrets";
 
   # in your home-manager modules:
   #   keychain-secrets.homeManagerModules.default
@@ -85,6 +95,10 @@ model for high-value secrets, servers, or shared machines.
 | Secrets only inside `nix develop` | [agenix-shell](https://github.com/aciceri/agenix-shell) |
 | Per-project (not global) env | [direnv](https://direnv.net/) |
 | **Global laptop API keys in *every* shell, incl. agent bash, no crypto ceremony** | **this** |
+
+## Used in production
+
+See it wired into a real fleet in **[kattakath/nix-config](https://github.com/kattakath/nix-config)** — [`modules/shared/home.nix`](https://github.com/kattakath/nix-config/blob/main/modules/shared/home.nix) imports `homeManagerModules.default` and sets `programs.keychainSecrets.enable = true` on the macOS host.
 
 ## License
 
